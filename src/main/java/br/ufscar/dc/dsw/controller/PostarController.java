@@ -6,6 +6,7 @@ import br.ufscar.dc.dsw.repositories.MessageRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,15 +15,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Locale;
+
 @Controller
 public class PostarController {
 
     private static final Logger logger = LoggerFactory.getLogger(PostarController.class);
 
     private final MessageRepository messageRepository;
+    private final MessageSource messageSource;
 
-    public PostarController(MessageRepository messageRepository) {
+    public PostarController(MessageRepository messageRepository, MessageSource messageSource) {
         this.messageRepository = messageRepository;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/postar")
@@ -36,14 +41,15 @@ public class PostarController {
     public String post(
             @Valid @ModelAttribute SendMessageForm sendMessageForm,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Locale locale) {
         logger.info("Post /postar - {}", sendMessageForm);
 
         if (sendMessageForm.getFrom() != null &&
                 !sendMessageForm.getFrom().trim().equals("") &&
                 sendMessageForm.getFrom().equals(sendMessageForm.getTo())) {
             logger.info("From and to equals");
-            bindingResult.reject("FromAndToSame", "From and to are the same");
+            bindingResult.reject("FromAndToSame");
         }
 
         if (bindingResult.hasErrors()) {
@@ -56,7 +62,7 @@ public class PostarController {
         message.setMessage(sendMessageForm.getMessage());
         messageRepository.save(message);
 
-        redirectAttributes.addFlashAttribute("success", "Mensagem enviada com sucesso");
+        redirectAttributes.addFlashAttribute("success", messageSource.getMessage("message.sent.success", null, locale));
         return "redirect:/mensagens";
     }
 
