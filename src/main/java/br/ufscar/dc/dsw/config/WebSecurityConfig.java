@@ -22,13 +22,15 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/cadastro", "/css/**", "/js/**", "/images/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
                 .logout(Customizer.withDefaults());
 
         return http.build();

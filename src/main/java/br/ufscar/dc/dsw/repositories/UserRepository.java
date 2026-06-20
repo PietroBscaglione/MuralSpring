@@ -1,33 +1,22 @@
 package br.ufscar.dc.dsw.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    private final IUserDAO userDAO;
+    Optional<User> findByUsername(String username);
 
-    public UserRepository(IUserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    public Optional<User> findByUsername(String username) {
-        return userDAO.findByUsername(username);
-    }
-
-    public long count() {
-        return userDAO.count();
-    }
-
-    public void save(String username, String password, String role) {
+    default User save(String username, String password, String role) {
         var encoder = new BCryptPasswordEncoder();
         var user = new User();
         user.setUsername(username);
         user.setPassword(encoder.encode(password));
         user.setRole(role);
-        userDAO.save(user);
+        return save(user);
     }
 }
