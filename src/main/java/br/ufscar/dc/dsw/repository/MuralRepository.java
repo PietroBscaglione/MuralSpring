@@ -1,8 +1,7 @@
-package br.ufscar.dc.dsw.repositories;
+package br.ufscar.dc.dsw.repository;
 
+import br.ufscar.dc.dsw.model.Mural;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface MuralRepository extends JpaRepository<Mural, Long> {
 }

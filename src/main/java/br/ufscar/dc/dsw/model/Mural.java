@@ -1,4 +1,4 @@
-package br.ufscar.dc.dsw.repositories;
+package br.ufscar.dc.dsw.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -57,16 +57,5 @@ public class Mural {
 
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
-    }
-
-    @Override
-    public String toString() {
-        return "Mural{" +
-                "id=" + id +
-                ", autor='" + autor + '\'' +
-                ", titulo='" + titulo + '\'' +
-                ", conteudo='" + conteudo + '\'' +
-                ", dataCriacao=" + dataCriacao +
-                '}';
     }
 }

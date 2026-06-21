@@ -1,58 +1,59 @@
 package br.ufscar.dc.dsw.controller;
 
-import br.ufscar.dc.dsw.repositories.User;
-import br.ufscar.dc.dsw.repositories.UserRepository;
-import org.springframework.http.HttpStatus;
+import br.ufscar.dc.dsw.dto.UserCreateDTO;
+import br.ufscar.dc.dsw.dto.UserResponseDTO;
+import br.ufscar.dc.dsw.dto.UserUpdateDTO;
+import br.ufscar.dc.dsw.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> criar(@RequestBody User user) {
-        user.setId(null);
-        User novoUsuario = userRepository.save(user);
-        return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> listar() {
-        List<User> usuarios = userRepository.findAll();
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    public ResponseEntity<List<UserResponseDTO>> findAll() {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> buscarPorId(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(usuario -> new ResponseEntity<>(usuario, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateDTO dto) {
+        var created = userService.create(dto);
+        return ResponseEntity
+                .created(URI.create("/api/usuarios/" + created.id()))
+                .body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
+        return ResponseEntity.ok(userService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(usuario -> {
-                    userRepository.delete(usuario);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,6 @@
 package br.ufscar.dc.dsw.config;
 
-import br.ufscar.dc.dsw.repositories.UserRepository;
+import br.ufscar.dc.dsw.repository.UserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

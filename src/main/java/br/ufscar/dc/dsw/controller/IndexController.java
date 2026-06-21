@@ -1,18 +1,16 @@
 package br.ufscar.dc.dsw.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.Map;
+
+@RestController
 public class IndexController {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
-
     @GetMapping("/")
-    public String index() {
-        logger.info("GET /");
-        return "index";
+    public ResponseEntity<Map<String, String>> index() {
+        return ResponseEntity.ok(Map.of("application", "mural-api"));
     }
 }

@@ -1,4 +1,4 @@
-package br.ufscar.dc.dsw.repositories;
+package br.ufscar.dc.dsw.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,10 +60,5 @@ public class Message {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Message[id='%d', from='%s', to='%s', message='%s', timestamp='%s']", id, from, to, message, timestamp);
     }
 }

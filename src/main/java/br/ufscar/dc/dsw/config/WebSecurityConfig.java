@@ -22,14 +22,18 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+        http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/cadastro", "/css/**", "/js/**", "/images/**")
+                                .requestMatchers(
+                                        "/",
+                                        "/api/usuarios",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**"
+                                )
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .logout(Customizer.withDefaults());
 

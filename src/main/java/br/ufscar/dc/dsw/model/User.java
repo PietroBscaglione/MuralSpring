@@ -1,4 +1,4 @@
-package br.ufscar.dc.dsw.repositories;
+package br.ufscar.dc.dsw.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,15 +46,5 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
     }
 }
